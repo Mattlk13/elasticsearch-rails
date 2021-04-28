@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -653,36 +653,6 @@ describe Elasticsearch::Model::Indexing do
 
       let(:client) do
         double('client', indices: double('indices', exists: false))
-      end
-
-      it 'returns false' do
-        expect(DummyIndexingModel.index_exists?).to be(false)
-      end
-    end
-
-    context 'when the index API raises an error' do
-
-      let(:client) do
-        double('client').tap do |cl|
-          expect(cl).to receive(:indices).and_raise(StandardError)
-        end
-      end
-
-      it 'returns false' do
-        expect(DummyIndexingModel.index_exists?).to be(false)
-      end
-    end
-
-    context 'when the indices.exists API raises an error' do
-
-      let(:client) do
-        double('client', indices: indices)
-      end
-
-      let(:indices) do
-        double('indices').tap do |ind|
-          expect(ind).to receive(:exists).and_raise(StandardError)
-        end
       end
 
       it 'returns false' do

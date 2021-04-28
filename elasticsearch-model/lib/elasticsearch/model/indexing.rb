@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -270,7 +270,7 @@ module Elasticsearch
         def index_exists?(options={})
           target_index = options[:index] || self.index_name
 
-          self.client.indices.exists(index: target_index) rescue false
+          self.client.indices.exists(index: target_index, ignore: 404)
         end
 
         # Deletes the index with corresponding name

@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.9.3"
 
   s.add_dependency "elasticsearch",       '~> 7'
-  s.add_dependency "elasticsearch-model", '7.0.0'
+  s.add_dependency "elasticsearch-model", '7.1.0'
   s.add_dependency "activesupport",       '> 4'
   s.add_dependency "activemodel",         '> 4'
   s.add_dependency "hashie"
@@ -52,8 +52,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "oj" unless defined?(JRUBY_VERSION)
 
   s.add_development_dependency "rails", '> 4'
-
-  s.add_development_dependency "elasticsearch-extensions"
 
   s.add_development_dependency "minitest"
   s.add_development_dependency "test-unit"

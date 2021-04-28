@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -44,7 +44,7 @@ $elasticsearch_url = ENV.fetch('ELASTICSEARCH_URL', 'http://localhost:9200')
 
 # ----- Check for Elasticsearch -------------------------------------------------------------------
 
-required_elasticsearch_version = '6'
+required_elasticsearch_version = '7'
 
 docker_command =<<-CMD.gsub(/\s{1,}/, ' ').strip
   docker run \
@@ -54,7 +54,7 @@ docker_command =<<-CMD.gsub(/\s{1,}/, ' ').strip
     --env "cluster.name=elasticsearch-rails" \
     --env "cluster.routing.allocation.disk.threshold_enabled=false" \
     --rm \
-    docker.elastic.co/elasticsearch/elasticsearch-oss:6.4.0
+    docker.elastic.co/elasticsearch/elasticsearch-oss:7.6.0
 CMD
 
 begin
@@ -156,7 +156,7 @@ puts
 say_status  "Rubygems", "Adding Elasticsearch libraries into Gemfile...\n", :yellow
 puts        '-'*80, ''; sleep 0.75
 
-gem 'elasticsearch',       git: 'https://github.com/elasticsearch/elasticsearch-ruby.git'
+gem 'elasticsearch'
 gem 'elasticsearch-model', git: 'https://github.com/elasticsearch/elasticsearch-rails.git'
 gem 'elasticsearch-rails', git: 'https://github.com/elasticsearch/elasticsearch-rails.git'
 

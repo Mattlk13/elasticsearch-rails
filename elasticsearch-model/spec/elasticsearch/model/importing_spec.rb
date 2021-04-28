@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -225,6 +225,18 @@ describe Elasticsearch::Model::Importing do
         it 'applies the transform lambda to the results' do
           expect(DummyImportingModel.import(transform: transform)).to eq(0)
         end
+      end
+    end
+
+    context 'when a pipeline is provided as an options' do
+
+      before do
+        expect(DummyImportingModel).to receive(:client).and_return(client)
+        expect(client).to receive(:bulk).with(body: nil, index: 'foo', type: 'foo', pipeline: 'my-pipeline').and_return(response)
+      end
+
+      it 'uses the pipeline option' do
+        expect(DummyImportingModel.import(pipeline: 'my-pipeline')).to eq(0)
       end
     end
   end

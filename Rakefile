@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -16,11 +16,12 @@
 # under the License.
 
 require 'pathname'
+require 'elasticsearch'
 
-subprojects = [ 'elasticsearch-rails', 'elasticsearch-persistence' ]
+subprojects = ['elasticsearch-rails', 'elasticsearch-persistence']
 subprojects << 'elasticsearch-model' unless defined?(JRUBY_VERSION)
 
-__current__ = Pathname( File.expand_path('..', __FILE__) )
+__current__ = Pathname(File.expand_path(__dir__))
 
 def admin_client
   $admin_client ||= begin
@@ -50,7 +51,7 @@ def admin_client
 end
 
 task :default do
-  system "rake --tasks"
+  system 'rake --tasks'
 end
 
 task :subprojects do
@@ -62,11 +63,11 @@ task :subprojects do
   end
 end
 
-desc "Alias for `bundle:install`"
-task :bundle => 'bundle:install'
+desc 'Alias for `bundle:install`'
+task bundle: 'bundle:install'
 
 namespace :bundle do
-  desc "Run `bundle install` in all subprojects"
+  desc 'Run `bundle install` in all subprojects'
   task :install do
     subprojects.each do |project|
       puts '-'*80
@@ -94,26 +95,6 @@ namespace :test do
       puts '-'*80
       sh "cd #{__current__.join(project)} && unset BUNDLE_GEMFILE && bundle exec rake test:unit"
       puts "\n"
-    end
-  end
-
-  desc "Run Elasticsearch (Docker)"
-  task :setup_elasticsearch_docker do
-    begin
-      sh <<-COMMAND.gsub(/^\s*/, '').gsub(/\s{1,}/, ' ')
-          docker run -d=true \
-            --env "discovery.type=single-node" \
-            --env "cluster.name=elasticsearch-rails" \
-            --env "http.port=9200" \
-            --env "cluster.routing.allocation.disk.threshold_enabled=false" \
-            --publish 9250:9200 \
-            --rm \
-            docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
-      COMMAND
-      require 'elasticsearch/extensions/test/cluster'
-      Elasticsearch::Extensions::Test::Cluster::Cluster.new(version: ENV['ELASTICSEARCH_VERSION'],
-                                                            number_of_nodes: 1).wait_for_green
-    rescue
     end
   end
 
@@ -165,26 +146,6 @@ namespace :test do
              "unset BUNDLE_GEMFILE && " +
              "bundle exec rake test:all"
       puts "\n"
-    end
-  end
-
-  namespace :cluster do
-    desc "Start Elasticsearch nodes for tests"
-    task :start do
-      require 'elasticsearch/extensions/test/cluster'
-      Elasticsearch::Extensions::Test::Cluster.start
-    end
-
-    desc "Stop Elasticsearch nodes for tests"
-    task :stop do
-      require 'elasticsearch/extensions/test/cluster'
-      Elasticsearch::Extensions::Test::Cluster.stop
-    end
-
-    task :status do
-      require 'elasticsearch/extensions/test/cluster'
-      (puts "\e[31m[!] Test cluster not running\e[0m"; exit(1)) unless Elasticsearch::Extensions::Test::Cluster.running?
-      Elasticsearch::Extensions::Test::Cluster.__print_cluster_info(ENV['TEST_CLUSTER_PORT'] || 9250)
     end
   end
 end

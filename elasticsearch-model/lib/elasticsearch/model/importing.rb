@@ -6,7 +6,7 @@
 # not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#	http://www.apache.org/licenses/LICENSE-2.0
+#   http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -143,6 +143,7 @@ module Elasticsearch
           target_index = options.delete(:index)     || index_name
           target_type  = options.delete(:type)      || document_type
           transform    = options.delete(:transform) || __transform
+          pipeline     = options.delete(:pipeline)
           return_value = options.delete(:return)    || 'count'
 
           unless transform.respond_to?(:call)
@@ -158,10 +159,15 @@ module Elasticsearch
           end
 
           __find_in_batches(options) do |batch|
-            response = client.bulk \
-                         index:   target_index,
-                         type:    target_type,
-                         body:    __batch_to_bulk(batch, transform)
+            params = {
+              index: target_index,
+              type:  target_type,
+              body:  __batch_to_bulk(batch, transform)
+            }
+
+            params[:pipeline] = pipeline if pipeline
+
+            response = client.bulk params
 
             yield response if block_given?
 
